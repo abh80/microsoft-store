@@ -12,6 +12,8 @@ interface getReturn {
     rating: string;
     rating_description: string;
     price: string;
+    category: string;
+    bg: string | undefined;
     system_requirements?: {
         minimum: any[];
         recommended: any[];

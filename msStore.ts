@@ -14,6 +14,7 @@ interface getReturn {
   rating: string;
   rating_description: string;
   price: string;
+  category: string;
   bg: string | undefined;
   system_requirements?: {
     minimum: any[];
@@ -86,6 +87,7 @@ export default class MsStore {
         publisher: $("#publisher div span").text(),
         rating: $("#maturityRatings div a").text(),
         rating_description: $("#maturityRatings div a").attr("aria-label"),
+        category: $("#category div a").text(),
         bg: $("#dynamicImage_backgroundImage_picture img").attr("src"),
         price: $(
           "#ProductPrice_productPrice_PriceContainer span.price-disclaimer span"
@@ -104,10 +106,16 @@ export default class MsStore {
           i,
           elem
         ) {
-          if (i <= 8) {
+          if (
+            !out.system_requirements.minimum
+              .map((x) => x.type)
+              .includes($(this).text())
+          ) {
             out.system_requirements.minimum[i] = { type: $(this).text() };
           } else {
-            out.system_requirements.recommended[i - 9] = {
+            out.system_requirements.recommended[
+              i - out.system_requirements.minimum.length
+            ] = {
               type: $(this).text(),
             };
           }
@@ -116,10 +124,12 @@ export default class MsStore {
           i,
           elem
         ) {
-          if (i <= 8) {
+          if (i < out.system_requirements.minimum.length) {
             out.system_requirements.minimum[i].value = $(this).text();
           } else {
-            out.system_requirements.recommended[i - 9].value = $(this).text();
+            out.system_requirements.recommended[
+              i - out.system_requirements.minimum.length
+            ].value = $(this).text();
           }
         });
         resolve(out);
