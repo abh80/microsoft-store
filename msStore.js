@@ -57,14 +57,21 @@ class MsStore {
                 reject("No url was provided");
             const $ = cheerio.load(html);
             // the object which will be output
-            const out = {
+            let out = {
                 name: $("h1").first().text(),
                 img: $("#dynamicImage_image_picture img").attr("src"),
                 publisher: $("#publisher div span").text(),
                 rating: $("#maturityRatings div a").text(),
                 rating_description: $("#maturityRatings div a").attr("aria-label"),
+                bg: $("#dynamicImage_backgroundImage_picture img").attr("src"),
                 price: $("#ProductPrice_productPrice_PriceContainer span.price-disclaimer span").text(),
             };
+            if (!out.bg) {
+                //checking if the bg is a video
+                // so this condition is true now we will load a static image of the video
+                out.bg = $("#trailer div div").attr("data-player-data");
+                out.bg = "https:" + JSON.parse(out.bg).metadata.posterframeUrl;
+            }
             if (system_requirements) {
                 //some simple brain things
                 out.system_requirements = { minimum: [], recommended: [] };
