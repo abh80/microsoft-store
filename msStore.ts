@@ -94,10 +94,12 @@ export default class MsStore {
         ).text(),
       };
       if (!out.bg) {
+        try {
         //checking if the bg is a video
         // so this condition is true now we will load a static image of the video
         out.bg = $("#trailer div div").attr("data-player-data");
         out.bg = "https:" + JSON.parse(out.bg).metadata.posterframeUrl;
+        }catch{out.bg = undefined}
       }
       if (system_requirements) {
         //some simple brain things
